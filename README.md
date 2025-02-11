@@ -8,19 +8,27 @@ To build this library, use:
 rojo build -o "Signal.rbxmx"
 ```
 
+## How To Use
+First, we use the Signal ModuleScript's RemoteEvent function to tell it we want a RemoteEvent.
 ```luau
--- CLIENT-SIDE
+-- CLIENT-SIDE --
 local ReplicatedStorage = require(game:GetService("ReplicatedStorage"))
 
+-- The ModuleScript should be in ReplicatedStorage, because both the Client and Server need to be able to load it.
 local Signal = require(ReplicatedStorage.Signal)
 
+-- The RemoteEvent function tells the ModuleScript to find an instance of it in ReplicatedStorage.
+-- If the requested RemoteEvent doesn't exist, it creates one with Instance.new() and re-parents it.
 local MyRemoteEvent = Signal.RemoteEvent("MyRemoteEvent")
 
+-- The return value of Signal.RemoteEvent() is just that, a RemoteEvent.
+-- It returns the Instance if it finds it, or returns the creaated Instance after re-parenting.
 MyRemoteEvent:FireServer("Hello, World!")
 ```
+In effect, it's just a Module with a couple of functions for dynamically initializing RemoteEvents without a lot of fuss.
 
 ```luau
--- SERVER-SIDE
+-- SERVER-SIDE --
 local ReplicatedStorage = require(game:GetService("ReplicatedStorage"))
 
 local Signal = require(ReplicatedStorage.Signal)
