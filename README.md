@@ -24,8 +24,6 @@ local MyRemoteEvent = Signal.RemoteEvent("MyRemoteEvent")
 -- The return value of Signal.RemoteEvent() is just a RemoteEvent.
 MyRemoteEvent:FireServer("Hello, World!")
 ```
-In effect, it's just a Module with a couple of functions for dynamically initializing RemoteEvents without a lot of fuss.
-
 ```luau
 -- SERVER-SIDE --
 local ReplicatedStorage = require(game:GetService("ReplicatedStorage"))
@@ -38,5 +36,6 @@ MyRemoteEvent.OnServerEvent:Connect(function(...: any)
   print(...)
 end)
 ```
+In effect, it's just a Module with a couple of functions for dynamically initializing RemoteEvents without a lot of fuss.
 
 For more help, check out [the Rojo documentation](https://rojo.space/docs).
