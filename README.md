@@ -18,11 +18,10 @@ local ReplicatedStorage = require(game:GetService("ReplicatedStorage"))
 local Signal = require(ReplicatedStorage.Signal)
 
 -- The RemoteEvent function tells the ModuleScript to find an instance of it in ReplicatedStorage.
--- If the requested RemoteEvent doesn't exist, it creates one with Instance.new() and re-parents it.
+-- If the requested RemoteEvent doesn't exist, it creates one.
 local MyRemoteEvent = Signal.RemoteEvent("MyRemoteEvent")
 
--- The return value of Signal.RemoteEvent() is just that, a RemoteEvent.
--- It returns the Instance if it finds it, or returns the creaated Instance after re-parenting.
+-- The return value of Signal.RemoteEvent() is just a RemoteEvent.
 MyRemoteEvent:FireServer("Hello, World!")
 ```
 In effect, it's just a Module with a couple of functions for dynamically initializing RemoteEvents without a lot of fuss.
