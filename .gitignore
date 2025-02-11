@@ -1,4 +1,5 @@
 # Roblox Studio lock files
+/signal.rbxm
 /*.rbxm.lock
 /*.rbxm
 /*.rbxlx.lock
