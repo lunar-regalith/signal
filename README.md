@@ -8,4 +8,28 @@ To build this library, use:
 rojo build -o "Signal.rbxmx"
 ```
 
+```luau
+-- CLIENT-SIDE
+local ReplicatedStorage = require(game:GetService("ReplicatedStorage"))
+
+local Signal = require(ReplicatedStorage.Signal)
+
+local MyRemoteEvent = Signal.RemoteEvent("MyRemoteEvent")
+
+MyRemoteEvent:FireServer("Hello, World!")
+```
+
+```luau
+-- SERVER-SIDE
+local ReplicatedStorage = require(game:GetService("ReplicatedStorage"))
+
+local Signal = require(ReplicatedStorage.Signal)
+
+local MyRemoteEvent = Signal.RemoteEvent("MyRemoteEvent")
+
+MyRemoteEvent.OnServerEvent:Connect(function(...: any)
+  print(...)
+end)
+```
+
 For more help, check out [the Rojo documentation](https://rojo.space/docs).
