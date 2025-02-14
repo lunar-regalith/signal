@@ -9,7 +9,6 @@ rojo build -o "Signal.rbxmx"
 ```
 
 ## How To Use
-First, we use the Signal ModuleScript's RemoteEvent function to tell it we want a RemoteEvent.
 ```luau
 -- CLIENT-SIDE --
 local ReplicatedStorage = require(game:GetService("ReplicatedStorage"))
