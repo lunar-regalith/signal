@@ -2,8 +2,17 @@ local Script = script
 
 type String = string
 
-local RemoteEvents: Folder = Script.RemoteEvents
-local RemoteFunctions: Folder = Script.RemoteFunctions
+local RemoteEvents: Folder = Script:FindFirstChild("RemoteEvents")
+if not RemoteEvents then
+	RemoteEvents = Instance.new("Folder", Script)
+	RemoteEvents.Name = "RemoteEvents"
+end
+
+local RemoteFunctions: Folder = Script:FindFirstChild("RemoteEvents")
+if not RemoteFunctions then
+	RemoteFunctions = Instance.new("Folder", Script)
+	RemoteFunctions.Name = "RemoteFunctions"
+end
 
 local BindableEvents: {[String]: BindableEvent} = {}
 local BindableFunctions: {[String]: BindableFunction} = {}
