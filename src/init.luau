@@ -1,67 +1,63 @@
+--!strict
 local Script = script
 
 type String = string
 
-local RemoteEvents: Folder = Script:FindFirstChild("RemoteEvents")
-if not RemoteEvents then
-	RemoteEvents = Instance.new("Folder", Script)
-	RemoteEvents.Name = "RemoteEvents"
+local function Folder(Name: String): Folder
+	local F: Instance? = Script:FindFirstChild(Name)
+	
+	if F then if F:IsA("Folder") then return F end end
+
+	local function Lambda(Name: String): Folder
+		local T = Instance.new("Folder", Script)
+		T.Name = Name
+		return T
+	end
+
+	return Lambda(Name)
 end
 
-local RemoteFunctions: Folder = Script:FindFirstChild("RemoteEvents")
-if not RemoteFunctions then
-	RemoteFunctions = Instance.new("Folder", Script)
-	RemoteFunctions.Name = "RemoteFunctions"
+local function Find(Parent: Folder, Name: String, Type: "RemoteEvent" | "RemoteFunction" | "BindableEvent" | "BindableFunction"): Instance
+	local Children = Parent:GetChildren()
+
+	for _, Child in Children do
+		if Child.Name == Name and Child:IsA(Type) then
+			return Child
+		end
+	end
+
+	local Return = Instance.new(Type, Parent)
+	Return.Name = Name
+
+	return Return
 end
 
-local BindableEvents: {[String]: BindableEvent} = {}
-local BindableFunctions: {[String]: BindableFunction} = {}
+local RemoteEvents: Folder = Folder("RemoteEvents")
+local RemoteFunctions: Folder = Folder("RemoteFunctions")
 
-local Module = {
-	RemoteEvent = function(Name: String)
-		local Event = RemoteEvents:FindFirstChild(Name)
+local BindableEvents: Folder = Folder("BindableEvents")
+local BindableFunctions: Folder = Folder("BindableFunctions")
 
-		if not Event then
-			Event = Instance.new("RemoteEvent")
-			Event.Parent = RemoteEvents
-			Event.Name = Name
-		end
-
-		return Event
+local Module: {
+	["RemoteEvent"] : (String) -> RemoteEvent,
+	["RemoteFunction"] : (String) -> RemoteFunction,
+	["BindableEvent"] : (String) -> BindableEvent,
+	["BindableFunction"] : (String) -> BindableFunction,
+} = {
+	RemoteEvent = function(Name: String): RemoteEvent
+		return Find(RemoteEvents, Name, "RemoteEvent") :: RemoteEvent
 	end,
-
-	RemoteFunction = function(Name: String)
-		local Event = RemoteFunctions:FindFirstChild(Name)
-
-		if not Event then
-			Event = Instance.new("RemoteFunction")
-			Event.Parent = RemoteFunctions
-			Event.Name = Name
-		end
-
-		return Event
+	
+	RemoteFunction = function(Name: String): RemoteFunction
+		return Find(RemoteFunctions, Name, "RemoteFunction") :: RemoteFunction
 	end,
-
-	BindableEvent = function(Name: String)
-		local Event = BindableEvents[Name]
-
-		if Event then return Event end
-
-		Event = Instance.new("BindableEvent")
-		BindableEvents[Name] = Event
-
-		return Event
+	
+	BindableEvent = function(Name: String): BindableEvent
+		return Find(BindableEvents, Name, "BindableEvent") :: BindableEvent
 	end,
-
-	BindableFunction = function(Name: String)
-		local Event = BindableFunctions[Name]
-
-		if Event then return Event end
-
-		Event = Instance.new("BindableFunction")
-		BindableFunctions[Name] = Event
-
-		return Event
+	
+	BindableFunction = function(Name: String): BindableFunction
+		return Find(BindableFunctions, Name, "BindableFunction") :: BindableFunction
 	end,
 }
 
