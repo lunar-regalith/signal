@@ -15,7 +15,7 @@ local function Find(Name: String, Class: String, Parent: Instance, Make: boolean
 	local Child = Instance.new(Class) :: Instance
 
 	Child.Name = Name
-	Chid.Parent = Parent
+	Child.Parent = Parent
 
 	return Child
 end
