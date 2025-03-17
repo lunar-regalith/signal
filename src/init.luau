@@ -13,8 +13,10 @@ local function Find(Name: String, Class: String, Parent: Instance, Make: boolean
 	if Make == false then return nil end
 	
 	local Child = Instance.new(Class) :: Instance
-	
-	Instance.new(Class)
+
+	Child.Name = Name
+
+	return Child
 end
 
 local RemoteEvents: Folder = Find("RemoteEvents", "Folder", Script) :: Folder
