@@ -3,40 +3,25 @@ local Script = script
 
 type String = string
 
-local function Folder(Name: String): Folder
-	local F: Instance? = Script:FindFirstChild(Name)
-	
-	if F then if F:IsA("Folder") then return F end end
-
-	local function Lambda(Name: String): Folder
-		local T = Instance.new("Folder", Script)
-		T.Name = Name
-		return T
-	end
-
-	return Lambda(Name)
-end
-
-local function Find(Parent: Folder, Name: String, Type: "RemoteEvent" | "RemoteFunction" | "BindableEvent" | "BindableFunction"): Instance
-	local Children = Parent:GetChildren()
-
-	for _, Child in Children do
-		if Child.Name == Name and Child:IsA(Type) then
+local function Find(Name: String, Class: String, Parent: Instance, Make: boolean?): Instance?
+	for _, Child in Parent:GetChildren() do
+		if Child.Name == Name and Child:IsA(Class) then
 			return Child
 		end
 	end
-
-	local Return = Instance.new(Type, Parent)
-	Return.Name = Name
-
-	return Return
+	
+	if Make == false then return nil end
+	
+	local Child = Instance.new(Class) :: Instance
+	
+	Instance.new(Class)
 end
 
-local RemoteEvents: Folder = Folder("RemoteEvents")
-local RemoteFunctions: Folder = Folder("RemoteFunctions")
+local RemoteEvents: Folder = Find("RemoteEvents", "Folder", Script) :: Folder
+local RemoteFunctions: Folder = Find("RemoteFunctions", "Folder", Script) :: Folder
 
-local BindableEvents: Folder = Folder("BindableEvents")
-local BindableFunctions: Folder = Folder("BindableFunctions")
+local BindableEvents: Folder = Find("BindableEvents", "Folder", Script) :: Folder
+local BindableFunctions: Folder = Find("BindableFunctions", "Folder", Script) :: Folder
 
 local Module: {
 	["RemoteEvent"] : (String) -> RemoteEvent,
@@ -45,19 +30,19 @@ local Module: {
 	["BindableFunction"] : (String) -> BindableFunction,
 } = {
 	RemoteEvent = function(Name: String): RemoteEvent
-		return Find(RemoteEvents, Name, "RemoteEvent") :: RemoteEvent
+		return Find(Name, "RemoteEvent", RemoteEvents) :: RemoteEvent
 	end,
-	
+
 	RemoteFunction = function(Name: String): RemoteFunction
-		return Find(RemoteFunctions, Name, "RemoteFunction") :: RemoteFunction
+		return Find(Name, "RemoteFunction", RemoteFunctions) :: RemoteFunction
 	end,
-	
+
 	BindableEvent = function(Name: String): BindableEvent
-		return Find(BindableEvents, Name, "BindableEvent") :: BindableEvent
+		return Find(Name, "BindableEvent", BindableEvents) :: BindableEvent
 	end,
-	
+
 	BindableFunction = function(Name: String): BindableFunction
-		return Find(BindableFunctions, Name, "BindableFunction") :: BindableFunction
+		return Find(Name, "BindableFunction", BindableFunctions) :: BindableFunction
 	end,
 }
 
