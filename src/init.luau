@@ -3,10 +3,12 @@ local Script = script
 
 type String = string
 
-local function Find(Name: String, Class: String, Parent: Instance, Make: boolean?): Instance?
-	for _, Child in Parent:GetChildren() do
-		if Child.Name == Name and Child:IsA(Class) then
-			return Child
+local function Find(Name: String, Class: String, Parent: Instance?, Make: boolean?): Instance?
+	if Parent then
+		for _, Child in Parent:GetChildren() do
+			if Child.Name == Name and Child:IsA(Class) then
+				return Child
+			end
 		end
 	end
 	
@@ -23,14 +25,14 @@ end
 local RemoteEvents: Folder = Find("RemoteEvents", "Folder", Script) :: Folder
 local RemoteFunctions: Folder = Find("RemoteFunctions", "Folder", Script) :: Folder
 
-local BindableEvents: Folder = Find("BindableEvents", "Folder", Script) :: Folder
-local BindableFunctions: Folder = Find("BindableFunctions", "Folder", Script) :: Folder
+local BindableEvents: {[String]: BindableEvent} = {}
+local BindableFunctions: {[String]: BindableFunction} = {}
 
 local Module: {
-	["RemoteEvent"] : (String) -> RemoteEvent,
-	["RemoteFunction"] : (String) -> RemoteFunction,
-	["BindableEvent"] : (String) -> BindableEvent,
-	["BindableFunction"] : (String) -> BindableFunction,
+	RemoteEvent : (String) -> RemoteEvent,
+	RemoteFunction : (String) -> RemoteFunction,
+	BindableEvent : (String) -> BindableEvent,
+	BindableFunction : (String) -> BindableFunction,
 } = {
 	RemoteEvent = function(Name: String): RemoteEvent
 		return Find(Name, "RemoteEvent", RemoteEvents) :: RemoteEvent
@@ -41,11 +43,17 @@ local Module: {
 	end,
 
 	BindableEvent = function(Name: String): BindableEvent
-		return Find(Name, "BindableEvent", BindableEvents) :: BindableEvent
+		if not BindableEvents[Name] then
+			BindableEvents[Name] = Find(Name, "BindableEvent") :: BindableEvent
+		end
+		return BindableEvents[Name]
 	end,
 
 	BindableFunction = function(Name: String): BindableFunction
-		return Find(Name, "BindableFunction", BindableFunctions) :: BindableFunction
+		if not BindableFunctions[Name] then
+			BindableFunctions[Name] = Find(Name, "BindableFunction") :: BindableFunction
+		end
+		return BindableFunctions[Name]
 	end,
 }
 
